@@ -28,8 +28,10 @@
 
 #include <Client/Client.hpp>
 #include <Client/InventoryUI.hpp>
+#include <Client/Graphics/GUI/ImSuperButton.hpp>
 
 #include <imgui.h>
+#include <iostream>
 
 using namespace phx::client;
 using namespace phx;
@@ -71,11 +73,18 @@ void InventoryUI::tick(float dt)
 	{
 		if (m_holding.type == nullptr)
 		{
-			ImGui::Button("", {50, 50});
+			std::cout << "test";
+			auto pressed = ImGui::SuperButton("", {50, 50});
+			if (pressed.any()) std::cout << "Was pressed...";
+			if (pressed[0]) std::cout << "left button,";
+			if (pressed[1]) std::cout << "right button,";
+			if (pressed[2]) std::cout << "middle button,";
+			if (pressed[3]) std::cout << "extra1 button,";
+			if (pressed[4]) std::cout << "extra2 button,";
 		}
 		else
 		{
-			ImGui::Button(m_holding.type->displayName.c_str(), {50, 50});
+			ImGui::SuperButton(m_holding.type->displayName.c_str(), {50, 50});
 		}
 	}
 	ImGui::End();
@@ -95,7 +104,8 @@ void InventoryUI::tick(float dt)
 		ImGui::PushID(i);
 		if (item.type == nullptr)
 		{
-			if (ImGui::Button("", {50, 50}))
+			auto pressed = ImGui::SuperButton("", {50, 50});
+			if (pressed.any())
 			{
 				if (m_holding.type != nullptr)
 				{
@@ -106,7 +116,7 @@ void InventoryUI::tick(float dt)
 		}
 		else
 		{
-			if (ImGui::Button(item.type->displayName.c_str(), {50, 50}))
+			if (ImGui::SuperButton(item.type->displayName.c_str(), {50, 50}).any())
 			{
 				if (m_holding.type == nullptr)
 				{
@@ -135,9 +145,11 @@ void InventoryUI::tick(float dt)
 			{
 				ImGui::SameLine();
 			}
-			if (ImGui::Button(m_referrer->items.get(i)->displayName.c_str(),
-			                  {50, 50}))
+			auto pressed = ImGui::Button(m_referrer->items.get(i)->displayName.c_str(),
+			                  {50, 50});
+			if (pressed)
 			{
+				std::cout << "Was pressed...";
 				m_holding = {m_referrer->items.get(i), nullptr};
 			}
 		}

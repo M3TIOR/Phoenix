@@ -6,6 +6,7 @@ set(Headers
 	${currentDir}/Container.hpp
 	${currentDir}/BasicShapes.hpp
 	${currentDir}/Button.hpp
+	${currentDir}/ImSuperButton.hpp
 
 	PARENT_SCOPE
 )

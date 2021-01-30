@@ -5,6 +5,7 @@ set(Sources
 	${currentDir}/Container.cpp
 	${currentDir}/BasicShapes.cpp
 	${currentDir}/Button.cpp
+	${currentDir}/ImSuperButton.cpp
 
 	PARENT_SCOPE
 )
