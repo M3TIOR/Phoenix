@@ -100,29 +100,29 @@ void Settings::registerAPI(cms::ModManager* manager)
 		  auto setting = Settings::get()->add(*name, *key, *defaultVal);
 
           sol::optional<int> max = data["max"];
-          if (max){setting->setMax(*max);}
+          if (max){setting.setMax(*max);}
           sol::optional<int> min = data["min"];
-          if (min){setting->setMin(*min);}
+          if (min){setting.setMin(*min);}
 	    });
 
 	manager->registerFunction("core.setting.get", [](std::string key) {
-		return Settings::get()->getSetting(key)->value();
+		return Settings::get()->getSetting(key).value();
 	});
 
 	manager->registerFunction("core.setting.set",
 	                          [](std::string key, int value) {
-		                          Settings::get()->getSetting(key)->set(value);
+		                          Settings::get()->getSetting(key).set(value);
 	                          });
 }
 
-Setting* Settings::add(const std::string& name, const std::string& key,
+Setting& Settings::add(const std::string& name, const std::string& key,
                        int defaultValue)
 {
 	m_settings[key] = Setting(name, key, defaultValue, &m_data);
-	return &m_settings[key];
+	return m_settings[key];
 }
 
-Setting* Settings::getSetting(const std::string& key)
+Setting& Settings::getSetting(const std::string& key)
 {
 	if (m_data.find(key) != m_data.end())
 	{
@@ -130,7 +130,7 @@ Setting* Settings::getSetting(const std::string& key)
 		{
 			add(key, key, m_data[key].get<int>());
 		}
-		return &m_settings[key];
+		return m_settings[key];
 	}
 	else
 	{

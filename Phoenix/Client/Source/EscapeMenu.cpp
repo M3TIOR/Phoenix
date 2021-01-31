@@ -43,7 +43,7 @@ void EscapeMenu::onAttach()
 {
 	m_page = Page::MAIN;
 
-	m_sensitivity        = Settings::get()->getSetting("camera:sensitivity");
+	m_sensitivity        = &Settings::get()->getSetting("camera:sensitivity");
 	m_currentSensitivity = m_sensitivity->value();
 	m_camera->enable(false);
 	m_active = true;
@@ -108,13 +108,16 @@ void EscapeMenu::tick(float dt)
 
 		for (const auto& setting : settings)
 		{
-			int i = setting.second.value();
-			ImGui::SliderInt(setting.second.getName().c_str(), &i,
-			                 setting.second.getMin(), setting.second.getMax());
-			if (i != setting.second.value())
-			{
-				Settings::get()->getSetting(setting.second.getKey())->set(i);
-			}
+			auto key = setting.first;
+			auto wrapper = setting.second;
+
+			int i = wrapper.value();
+			ImGui::SliderInt(key.c_str(), &i,
+			                 wrapper.getMin(), wrapper.getMax());
+
+			// We don't need to check for a state change because it will only
+			// change upon slider movement.
+			settings.at(key).set(i);
 		}
 		if (ImGui::Button("Back", {290, 30}))
 		{

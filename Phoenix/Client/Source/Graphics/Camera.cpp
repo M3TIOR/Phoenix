@@ -50,9 +50,10 @@ FPSCamera::FPSCamera(Window* window, entt::registry* registry)
 	                  std::floor(windowSize.y / 2.f)};
 
 	m_settingSensitivity =
-	    Settings::get()->add("Sensitivity", "camera:sensitivity", 50);
-	m_settingSensitivity->setMax(100);
-	m_settingSensitivity->setMin(1);
+	    &Settings::get()->add("Sensitivity", "camera:sensitivity", 50);
+	Setting& sensitivity = Settings::get()->getSetting("camera:sensitivity");
+	sensitivity.setMax(100);
+	sensitivity.setMin(1);
 
 	m_crosshair = new client::Crosshair(m_window);
 	client::Client::get()->pushLayer(m_crosshair);
@@ -86,8 +87,9 @@ void FPSCamera::tick(float dt)
 
 	m_window->setCursorPosition(m_windowCentre);
 
+	// Could this be causing a problem?
 	const float sensitivity =
-	    static_cast<float>(m_settingSensitivity->value()) / 50.f;
+	    static_cast<float>(m_settingSensitivity->value()) / 100.f;
 
 	Position& pos = m_registry->get<Position>(m_actor);
 

@@ -89,7 +89,7 @@ namespace phx
 		 * @param defaultValue The default value for the setting upon creation.
 		 */
 		Setting(std::string name, std::string key, int defaultValue, json* json_);
-	
+
 		/**
 		 * @brief Sets the value of an already existing setting.
 		 *
@@ -169,7 +169,7 @@ namespace phx
 		 * @return std::size_t Returns the numerical key the setting is stored
 		 * at.
 		 */
-		Setting* add(const std::string& name, const std::string& key,
+		Setting& add(const std::string& name, const std::string& key,
 		             int defaultValue);
 
 		/**
@@ -178,7 +178,7 @@ namespace phx
 		 * @param key Unique Name for key ex: core:volume.
 		 * @return Setting* A pointer to the setting object.
 		 */
-		Setting* getSetting(const std::string& key);
+		Setting& getSetting(const std::string& key);
 
 		const std::unordered_map<std::string, Setting>& getSettings();
 
