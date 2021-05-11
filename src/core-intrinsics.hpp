@@ -46,8 +46,10 @@
 #	define ENGINE_PLATFORM_WINDOWS
 #elif defined(__linux__)
 #	define ENGINE_PLATFORM_LINUX
+# define ENGINE_PLATFORM_POSIX
 #elif defined(__APPLE__)
 #	define ENGINE_PLATFORM_APPLE
+# DEFINE ENGINE_PLATFORM_POSIX
 #endif
 
 #if defined(ENGINE_PLATFORM_WINDOWS)

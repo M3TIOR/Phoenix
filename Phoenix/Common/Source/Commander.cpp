@@ -73,11 +73,11 @@ int CommandBook::getPage() { return m_page; }
 
 void CommandBook::registerAPI(cms::ModManager* manager)
 {
-	manager->registerFunction(
-	    "core.command.register",
-	    [](std::string command, std::string help, sol::function f) {
-		    CommandBook::get()->add(command, help, "all", f);
-	    });
+	// manager->registerFunction(
+	//     "core.command.register",
+	//     [](std::string command, std::string help, sol::function f) {
+	// 	    CommandBook::get()->add(command, help, "all", f);
+	//     });
 }
 
 bool Commander::help(const std::vector<std::string>& args, std::ostream& out)

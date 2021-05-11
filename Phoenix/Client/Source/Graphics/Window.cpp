@@ -44,96 +44,12 @@ using namespace gfx;
 
 Window::Window(const std::string& title, int width, int height)
 {
-	SDL_SetMainReady(); // because we've defined SDL_MAIN_HANDLED, we want SDL
-	                    // to know our main function is perfectly capable.
-	SDL_Init(SDL_INIT_EVERYTHING);
 
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
-	                    SDL_GL_CONTEXT_PROFILE_CORE);
-
-#ifdef ENGINE_DEBUG
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
-#endif
-
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 2);
-
-	m_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED,
-	                            SDL_WINDOWPOS_CENTERED, width, height,
-	                            SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
-	if (m_window == nullptr)
-	{
-		SDL_Quit();
-		std::cout << "[ERROR1] Couldn't create window, need OpenGL >= 3.3"
-		          << std::endl;
-		exit(EXIT_FAILURE);
-	}
-
-	m_cachedScreenSize = {static_cast<float>(width),
-	                      static_cast<float>(height)};
-
-	m_context = SDL_GL_CreateContext(m_window);
-	SDL_GL_MakeCurrent(m_window, m_context);
-
-	if (!gladLoadGLLoader(static_cast<GLADloadproc>(SDL_GL_GetProcAddress)))
-	{
-		std::cout << "[ERROR2] Couldn't create window, need OpenGL >= 3.3"
-		          << std::endl;
-		exit(EXIT_FAILURE);
-	}
-
-#ifdef ENGINE_DEBUG
-	GLint flags;
-	glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
-	if (flags & GL_CONTEXT_FLAG_DEBUG_BIT)
-	{
-		glEnable(GL_DEBUG_OUTPUT);
-		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-		glDebugMessageCallback(glDebugOutput, nullptr);
-		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0,
-		                      nullptr, GL_TRUE);
-	}
-#endif
-
-	SDL_ShowWindow(m_window);
-
-	GLCheck(glEnable(GL_DEPTH_TEST));
-	GLCheck(glEnable(GL_MULTISAMPLE));
-	GLCheck(glEnable(GL_BLEND));
-	GLCheck(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-	GLCheck(glEnable(GL_CULL_FACE))
-	GLCheck(glCullFace(GL_BACK))
-	GLCheck(glFrontFace(GL_CW))
-
-	m_running = true;
-
-	SDL_SetRelativeMouseMode(SDL_FALSE);
-
-	glViewport(0, 0, width, height);
-	
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& imguiIO = ImGui::GetIO();
-	imguiIO.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
-
-	ImGui_ImplSDL2_InitForOpenGL(m_window, m_context);
-	ImGui_ImplOpenGL3_Init("#version 330 core");
 }
 
 Window::~Window()
 {
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplSDL2_Shutdown();
-	ImGui::DestroyContext();
 
-	SDL_GL_DeleteContext(m_context);
-	SDL_DestroyWindow(m_window);
-
-	SDL_Quit();
 }
 
 void Window::pollEvents()
@@ -264,33 +180,20 @@ void Window::pollEvents()
 	}
 }
 
-void Window::swapBuffers() const { SDL_GL_SwapWindow(m_window); }
+void Window::swapBuffers() const {  }
 bool Window::isRunning() const { return m_running; }
 
 void Window::startFrame()
 {
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplSDL2_NewFrame(m_window);
-	ImGui::NewFrame();
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(0.52f, 0.64f, 0.85f, 1.0f);
 }
 
 void Window::endFrame()
 {
-	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-	swapBuffers();
-	pollEvents();
 }
 
-void Window::show() const { SDL_ShowWindow(m_window); }
-void Window::hide() const { SDL_HideWindow(m_window); }
-void Window::maximize() const { SDL_MaximizeWindow(m_window); }
-void Window::minimize() const { SDL_MinimizeWindow(m_window); }
-void Window::focus() const { SDL_SetWindowInputFocus(m_window); }
+
 void Window::close() { m_running = false; }
 
 void Window::resize(math::vec2 size)
@@ -414,4 +317,3 @@ void Window::setCursorState(gfx::CursorState state)
 	const bool on = (state == gfx::CursorState::NORMAL);
 	SDL_ShowCursor(on);
 }
-

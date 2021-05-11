@@ -35,7 +35,7 @@ namespace phx::cms
 	// can do template<typename RtnType, typename... Args>
 	// but allowing for anything makes sure you can capture lambdas.
 	template <typename F>
-	void ModManager::registerFunction(const std::string& funcName, const F& func)
+	void ModManager::registerFunction(const std::string& funcName, const lambda<F&> lambda)
 	{
 		// splitting the function name by periods.
 		// something like core.block.register would be broken down into
@@ -45,6 +45,11 @@ namespace phx::cms
 		std::vector<std::string> branches;
 		std::stringstream        sstream(funcName);
 		std::string              substr;
+		// Temporaryily introducing a memory leak to get this to work. If it's on
+		// the heap, it will still be destroyed when the program closes by the
+		// kernel. But having it on the heap means it should be safe to use
+		// within lua as our Game initializer won't destroy it.
+		auto                     fn = new std::function<F&>(lambda);
 		while (std::getline(sstream, substr, '.'))
 		{
 			branches.push_back(substr);
@@ -58,7 +63,7 @@ namespace phx::cms
 		// infinite recursion doesn't work.
 		if (branches.size() == 1)
 		{
-			m_luaState[branches[0]] = func;
+			m_luaState[branches[0]] = fn;
 			return;
 		}
 
@@ -69,7 +74,7 @@ namespace phx::cms
 				m_luaState[branches[0]] = m_luaState.create_table();
 			}
 
-			m_luaState[branches[0]][branches[1]] = func;
+			m_luaState[branches[0]][branches[1]] = fn;
 		}
 
 		if (branches.size() == 3)
@@ -85,7 +90,7 @@ namespace phx::cms
 				    m_luaState.create_table();
 			}
 
-			m_luaState[branches[0]][branches[1]][branches[2]] = func;
+			m_luaState[branches[0]][branches[1]][branches[2]] = fn;
 		}
 
 		if (branches.size() > 3)

@@ -26,8 +26,12 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include <Common/CoreIntrinsics.hpp>
-#include <Common/Logger.hpp>
+/* Internal Includes */
+
+#include "core-intrinsic.hpp"
+#include "logger.hpp"
+
+/* External Includes */
 
 #ifdef ENGINE_PLATFORM_WINDOWS
 #	include <Windows.h>
@@ -35,9 +39,12 @@
 #	define _CRT_SECURE_NO_WARNINGS
 #endif
 
+/* Standard Includes */
+
 #include <cstdio>
 #include <cstring>
 #include <cmath>
+
 
 using namespace phx;
 
@@ -251,7 +258,7 @@ void Logger::loggerInternal(const Log& log)
 			    3 + log.errorFile.size() + (std::log10(log.errorLine) + 1);
 		}
 #		endif
-		
+
 		// +1 because null terminator.
 		buffer = new char[length];
 
@@ -277,7 +284,7 @@ void Logger::loggerInternal(const Log& log)
 
 		// with fwrite do -1 on the length because printing the null terminator
 		// makes a random space.
-		
+
 		if (m_logToConsole)
 		{
 			setTerminalTextColor(log.verbosity);
@@ -317,4 +324,3 @@ void Logger::loggerThreadHandle()
 		loggerInternal(log);
 	}
 }
-

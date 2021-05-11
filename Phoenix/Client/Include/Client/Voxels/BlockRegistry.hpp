@@ -35,6 +35,7 @@
 #include <Common/CMS/ModManager.hpp>
 #include <Common/Registry.hpp>
 #include <Common/Voxels/BlockReferrer.hpp>
+#include <Common/Math/Vector3.hpp>
 
 #include <string>
 #include <unordered_map>
@@ -155,7 +156,7 @@ namespace phx::client
 					    block.rotH = *rotH;
 				    }
 
-				    sol::optional<bool> rotV = luaBlock["roth"];
+				    sol::optional<bool> rotV = luaBlock["rotv"];
 				    if (rotV)
 				    {
 					    block.rotV = *rotV;
@@ -166,12 +167,18 @@ namespace phx::client
 				    {
 					    block.onPlace = *onPlace;
 				    }
+						else {
+							LOG_WARNING("MODDING") << block.displayName << " onPlace wasn't registered.";
+						}
 
 				    sol::optional<sol::function> onBreak = luaBlock["onBreak"];
 				    if (onBreak)
 				    {
 					    block.onBreak = *onBreak;
 				    }
+						else {
+							LOG_WARNING("MODDING") << block.displayName << " onBreak wasn't registered.";
+						}
 
 				    sol::optional<sol::function> onInteract =
 				        luaBlock["onInteract"];

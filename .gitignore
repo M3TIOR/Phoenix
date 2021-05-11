@@ -7,3 +7,4 @@ out/
 CMakeSettings.json
 
 Documentation/Build/
+deps/

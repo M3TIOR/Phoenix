@@ -67,13 +67,19 @@ void Chunk::setBlockAt(const phx::math::vec3& position, Block newBlock)
 		Block oldBlock = getBlockAt(position);
 		if (oldBlock.type->onBreak)
 		{
-			LOG_DEBUG("Chunk.cpp") << "Here";
+			LOG_DEBUG("Chunk.cpp") << "Here is breaking an old " << oldBlock.type->displayName;
 			oldBlock.type->onBreak(position);
 		}
 		m_blocks[getVectorIndex(position)] = newBlock.type;
 		if (newBlock.metadata != nullptr)
 		{
 			m_metadata[getVectorIndex(position)] = *newBlock.metadata;
+		}
+		if (newBlock.type->onBreak)
+		{
+			LOG_DEBUG("Chunk.cpp") << "Here is breaking a new " << newBlock.type->displayName;
+			newBlock.type->onBreak(position);
+			newBlock.type->onBreak(position);
 		}
 		if (newBlock.type->onPlace)
 		{

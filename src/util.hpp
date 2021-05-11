@@ -26,28 +26,19 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include <Client/Client.hpp>
-#include <Common/CLIParser.hpp>
-#include <Common/Logger.hpp>
+#include <filesystem>
 
-using namespace phx;
+// Safer than `using namespace std::filesystem`
+namespace fs = std::filesystem;
 
-#undef main
-int main(int argc, char** argv)
-{
-	CLIParser parser;
-
-	client::Client::get()->setupCLIParam(&parser);
-
-	// .parse returns true/false depending on success.
-	if (!parser.parse(argc, argv))
-	{
-		// if error, things have already been outputted so we can just leave it
-		// here.
-		return 1;
-	}
-
-	client::Client::get()->run();
-
-	return 0;
-}
+namespace phx::util {
+	// datastore.cpp
+	fs::path homedir();
+	namespace datastore {
+		fs::path temporary(const char* name_prefix, bool autoclean = true);
+		fs::path local(const char** identity);
+		fs::path roaming(const char** identity);
+		fs::path cache(const char** identity);
+	};
+	// end datastore.cpp
+};

@@ -65,29 +65,29 @@ void Settings::registerAPI(cms::ModManager* manager)
 
 	// we manually define the string one because we pass defaultValue as a const
 	// reference.
-	manager->registerFunction(
-	    "core.settings.get",
-	    sol::overload(
-	        PHX_LUA_OVERLOAD(double), PHX_LUA_OVERLOAD(bool),
-	        [](const std::string& key, const std::string& defaultValue) {
-		        if (Settings::instance()->valid<std::string>(key))
-		        {
-			        return static_cast<std::string>(
-			            Settings::instance()->get<std::string>(key, true));
-		        }
-
-		        if (!Settings::instance()->exists(key))
-		        {
-			        // get or will create an object since we know it doesn't
-			        // exist.
-			        // not super performant since the "exists" gets called twice
-			        // but since this is ideally done at the start of a game
-			        // being loaded, it should be fine.
-			        Settings::instance()->get<std::string>(key) = defaultValue;
-		        }
-
-		        return defaultValue;
-	        }));
+	// manager->registerFunction(
+	//     "core.settings.get",
+	//     sol::overload(
+	//         PHX_LUA_OVERLOAD(double), PHX_LUA_OVERLOAD(bool),
+	//         [](const std::string& key, const std::string& defaultValue) {
+	// 	        if (Settings::instance()->valid<std::string>(key))
+	// 	        {
+	// 		        return static_cast<std::string>(
+	// 		            Settings::instance()->get<std::string>(key, true));
+	// 	        }
+	//
+	// 	        if (!Settings::instance()->exists(key))
+	// 	        {
+	// 		        // get or will create an object since we know it doesn't
+	// 		        // exist.
+	// 		        // not super performant since the "exists" gets called twice
+	// 		        // but since this is ideally done at the start of a game
+	// 		        // being loaded, it should be fine.
+	// 		        Settings::instance()->get<std::string>(key) = defaultValue;
+	// 	        }
+	//
+	// 	        return defaultValue;
+	//         }));
 
 #undef PHX_LUA_OVERLOAD
 #define PHX_LUA_OVERLOAD(type)                                                 \
@@ -108,27 +108,27 @@ void Settings::registerAPI(cms::ModManager* manager)
 		}                                                                      \
 	}
 
-	manager->registerFunction(
-	    "core.settings.set",
-	    sol::overload(
-	        PHX_LUA_OVERLOAD(double), PHX_LUA_OVERLOAD(bool),
-	        [](const std::string& key, const std::string& value) {
-		        if (Settings::instance()->valid<std::string>(key))
-		        {
-			        Settings::instance()->get<std::string>(key, true) = value;
-		        }
-		        else
-		        {
-			        if (!Settings::instance()->exists(key))
-			        {
-				        Settings::instance()->get<std::string>(key) = value;
-			        }
-
-			        LOG_FATAL("MODDING")
-			            << "A mod is attempting to store an invalid "
-			               "value into a setting.";
-		        }
-	        }));
+	// manager->registerFunction(
+	//     "core.settings.set",
+	//     sol::overload(
+	//         PHX_LUA_OVERLOAD(double), PHX_LUA_OVERLOAD(bool),
+	//         [](const std::string& key, const std::string& value) {
+	// 	        if (Settings::instance()->valid<std::string>(key))
+	// 	        {
+	// 		        Settings::instance()->get<std::string>(key, true) = value;
+	// 	        }
+	// 	        else
+	// 	        {
+	// 		        if (!Settings::instance()->exists(key))
+	// 		        {
+	// 			        Settings::instance()->get<std::string>(key) = value;
+	// 		        }
+	//
+	// 		        LOG_FATAL("MODDING")
+	// 		            << "A mod is attempting to store an invalid "
+	// 		               "value into a setting.";
+	// 	        }
+	//         }));
 }
 
 bool Settings::parse(const std::string& configFile)
@@ -139,7 +139,7 @@ bool Settings::parse(const std::string& configFile)
 
 	{
 		namespace fs = std::filesystem;
-		
+
 		std::ifstream file {m_configFilePath};
 		if (!file.is_open())
 		{
@@ -149,12 +149,12 @@ bool Settings::parse(const std::string& configFile)
 				// just return true since we can't read... an empty file.
 				return true;
 			}
-			
+
 			// the file isn't open, but it exists, so something went wrong,
 			// probably permissions.
 			return false;
 		}
-		
+
 		file.seekg(0, std::ios::end);
 		data.resize(file.tellg());
 		file.seekg(0, std::ios::beg);
@@ -194,10 +194,10 @@ void Settings::save()
 			             "new/overridden settings will be written."
 			          << std::endl;
 		}
-		
+
 		return;
 	}
-	
+
 	file << std::setw(4) << m_settings << std::endl;
 }
 

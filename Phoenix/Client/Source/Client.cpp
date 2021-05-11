@@ -41,37 +41,6 @@ Client::Client() : m_window("Phoenix Game!", 1280, 720), m_layerStack(&m_window)
 {
 	m_window.registerEventListener(this);
 }
-
-void Client::setupCLIParam(phx::CLIParser* parser)
-{
-	phx::CLIParameter saveParam;
-	saveParam.parameter       = "save";
-	saveParam.shorthand       = "s";
-	saveParam.enableShorthand = true;
-	saveParam.helpString =
-	    "Usage: \n\tPhoenixClient --save NameOfSaveToUse"
-	    "\n\tAlternatively: PhoenixClient -s NameOfSaveToUse";
-
-	phx::CLIParameter modParam;
-	modParam.parameter  = "mods";
-	modParam.multiValue = true;
-	modParam.helpString = "Usage: \n\tPhoenixClient --mods Mod1 Mod2 Mod3 Mod4";
-
-	phx::CLIParameter configParam;
-	configParam.parameter       = "config";
-	configParam.shorthand       = "c";
-	configParam.enableShorthand = true;
-	configParam.helpString =
-	    "Usage: \n\tPhoenixClient --config PathToConfigFileToUse"
-	    "\n\tAlternatively: PhoenixClient -c PathToConfigFileToUse";
-
-	parser->addParameter(saveParam);
-	parser->addParameter(modParam);
-	parser->addParameter(configParam);
-
-	m_cliArguments = parser;
-}
-
 void Client::pushLayer(phx::gfx::Layer* layer)
 {
 	if (layer->isOverlay())

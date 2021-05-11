@@ -6,6 +6,6 @@ file(GLOB_RECURSE assetFiles "*.*")
 
 add_custom_target(${PROJECT_NAME}-client
                    COMMAND ${CMAKE_COMMAND} -E copy_directory
-                   ${assetsPath} ${CMAKE_BINARY_DIR}/Phoenix/Client/Assets
+                   ${assetsPath} ${CMAKE_BINARY_DIR}/assets
 				   SOURCES ${assetFiles}
 )

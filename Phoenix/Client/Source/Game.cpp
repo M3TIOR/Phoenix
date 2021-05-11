@@ -317,6 +317,7 @@ void Game::onEvent(events::Event& e)
 		default:
 			break;
 		}
+	break;
 	case events::EventType::MOUSE_BUTTON_PRESSED:
 		if (!m_camera->isEnabled())
 			break;

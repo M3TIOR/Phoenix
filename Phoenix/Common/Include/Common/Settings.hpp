@@ -39,7 +39,6 @@
 #include <Common/CMS/ModManager.hpp>
 #include <Common/Singleton.hpp>
 
-#include <nlohmann/json.hpp>
 
 #include <string>
 
@@ -172,7 +171,7 @@ namespace phx
 			std::string key;
 			nlohmann::json* val;
 		};
-		
+
 	public:
 		Settings()  = default;
 		~Settings() = default;
@@ -180,7 +179,7 @@ namespace phx
 		static Settings* instance();
 
 		void registerAPI(cms::ModManager* manager);
-		
+
 		// void registerAPI(cms::ModManager* manager);
 		bool parse(const std::string& configFile);
 		void save();
@@ -289,7 +288,7 @@ namespace phx
 
 		// clang-format off
 		// have to turn clang-format off here otherwise it formats funkily.
-			
+
 		/**
 		 * @brief Validates the data type found at the value associated with requested key.
 		 * @tparam Type The underlying datatype, vector-based data type being validated.
@@ -322,14 +321,14 @@ namespace phx
 						return std::all_of(it->begin(), it->end(),
 						                   [](const nlohmann::json& val) {
 							                   return val.is_string();
-						                   });	
+						                   });
 					}
 					else if constexpr (std::is_same_v<typename Type::value_type, bool>)
 					{
 						return std::all_of(it->begin(), it->end(),
 						                   [](const nlohmann::json& val) {
 							                   return val.is_boolean();
-						                   });	
+						                   });
 					}
 				}
 			}
@@ -376,7 +375,7 @@ namespace phx
 		 * Anything in this object is stored in the file.
 		 */
 		nlohmann::json m_settings;
-		
+
 		/**
 		 * @brief The secondary settings object for primarily in-ram
 		 * settings.
